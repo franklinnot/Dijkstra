@@ -184,22 +184,7 @@ def pay_service(account):
 # buenas practicas jeje
 if __name__ == "__main__":
     
-    # usar este codigo solo para pruebas y dando nuevos valores
-    '''
-    new_account = Account(
-    dni="95743215",
-    given_name="Camila Jen",
-    last_name="Torres Smith",
-    address="Buenos Aires",
-    phone_number="9957714325",
-    email="camilasmith@outlook.com",
-    password="reborn123",
-    balance=6996.0)
-    
-    account_list.append(new_account)
-    
-    temporizador("Registro exitoso!", 3)
-    '''
+    # este codigo elije un cajero cada que aparezca el main
     
     while True:
         atm = random.choice(atm_list)
