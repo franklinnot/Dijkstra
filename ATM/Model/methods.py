@@ -1,9 +1,9 @@
 # main.py
-from Model.Account import Account
-from Model.ATM import ATM
-from Model.Company import Company
-from Model.ServicePay import ServicePay
-from Model.Transaction import Transaction
+from Account import Account
+from ATM import ATM
+from Company import Company
+from ServicePay import ServicePay
+from Transaction import Transaction
 import random
 
 account_list = []
