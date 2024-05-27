@@ -4,20 +4,19 @@
 ###################
 
 Tareas asignadas:
-1:A Bruce
+1:A Yuleisy
 2:B Flavio
-3:C Yuleisy
+3:C Bruce
 4:D Boyita
 5:E Jesús 
 
 ##################
 
-A) Implementar un metodo genérico que reciba alguna de las siguientes entradas y devuelva la cuenta asociada a esa entrada: dni, email, telefono. Este metodo debe ser de busqueda binaria. Si hay alguna cuenta asociada a alguna de estas entradas, devolver la cuenta, si no hay nignuna devolver None. Ejemplo de llamada a ese metodo por:
-Dni: search_account(dni, None, None)
-Email: search_account(None, email, None)
-Telefono: search_account(None, None, phone_number)
+A) Implementar el metodo quicksort para la lista de cuentas (account_list) y para la lista de transacciones. Úitl para reducir codigo.
 
-A) Login
+A) Show Transactions
+
+A) Registro
 
 
 B) Agregar 5 cajeros más. Esto puede ser automatizado, siguiendo el ejemplo colocado en el archivo Account.py
@@ -26,12 +25,13 @@ B) Implementar el metodo para el retiro de dinero. Este metodo recibe un objeto 
 
 
 
+C) Implementar un metodo genérico que reciba alguna de las siguientes entradas y devuelva la cuenta asociada a esa entrada: dni, email, telefono. Este metodo debe ser de busqueda binaria. Si hay alguna cuenta asociada a alguna de estas entradas, devolver la cuenta, si no hay nignuna devolver None. Ejemplo de llamada a ese metodo por:
+Dni: search_account(dni, None, None)
+Email: search_account(None, email, None)
+Telefono: search_account(None, None, phone_number)
 
-C) Implementar el metodo quicksort para la lista de cuentas (account_list) y para la lista de transacciones. Úitl para reducir codigo.
+C) Login
 
-C) Show Transactions
-
-C) Registro
 
 
 D) Utilizando el metodo generico de busqueda, terminar el metodo de "make_transfer" cuyas instrucciones se encuentran dentro.
