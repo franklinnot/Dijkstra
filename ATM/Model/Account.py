@@ -24,7 +24,7 @@ class Account():
         self.transactions = [] # lista de objetos "Transaction"
         self.services_pay = [] # lista de objetos "ServicePay"
 
-
+""""
 
 ####################### CÓDIGO DE EJEMPLO COMENTADO
 
@@ -115,3 +115,5 @@ for c in account_list:
     for t in c.services_pay:
         print(f"{t.destination_company.tradename}     -{t.amount}      {t.atm.address}       {t.date}")
     print("\n")
+    
+"""
