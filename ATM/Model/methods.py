@@ -5,6 +5,7 @@ from Company import Company
 from ServicePay import ServicePay
 from Transaction import Transaction
 import random
+from os import system
 
 account_list = []
 company_list = []
@@ -17,7 +18,58 @@ for i in range(5):
     atm_list.append(new_atm)
     
 atm = None
+def ingreso_billetes(balance):
+    aux=0
+    print("Los billetes aceptados son [200] [100] [50] [20] [10]")
+    while True:
+            if aux != balance:         
+             billete=float(input("Ingrese los billetes:"))
+                      
+             if billete == 200:
+                aux+=200
+                atm.bill_two_hundred+=1
+             elif billete == 100:
+                aux+= 100
+                atm.bill_one_hundred+=1
+             elif billete == 50:
+                aux+= 50
+                atm.bill_fifty+=1
+             elif billete == 20:
+                aux+= 20
+                atm.bill_twenty+=1
+             elif billete == 10:
+                aux+= 10
+                atm.bill_ten+=1
+            else:
+                break
 
+def binary_search(accounts, target, key):
+    low = 0
+    high = len(accounts) - 1
+
+    while low <= high:
+        mid = (low + high) // 2
+        if getattr(accounts[mid], key) == target:
+            return accounts[mid]
+        elif getattr(accounts[mid], key) < target:
+            low = mid + 1
+        else:
+            high = mid - 1
+    return None
+
+def search_account(dni=None, email=None, phone_number=None,password=None):
+    account_list
+    if dni is not None:
+        return binary_search(account_list, dni, 'dni')
+    elif email is not None:
+        return binary_search(account_list, email, 'email')
+    elif phone_number is not None:
+        return binary_search(account_list, phone_number, 'phone_number')
+    elif password is not None:
+        return binary_search(account_list,password,'password')
+    else:
+        return None
+    
 # creamos una empresa xd
 new_company = Company("878", "Quavii", "Quavii SAC", "Ov. Marina 423", "925584321", "quavii@gmail.com", 6700.0)
 company_list.append(new_company)
@@ -39,48 +91,71 @@ def main():
 
 
 def register():
-    print("Ingrese los siguientes datos:")
-    # aqui se debe agregar la logica para verificar que no existe otra cuenta con ese dni, telefono ni email
-    dni = input("DNI: ")
-    given_name = input("Nombre: ")
-    last_name = input("Apellidos: ")
-    address = input("Dirección: ")
-    phone_number = input("Teléfono: ")
-    email = input("Email: ")
-    password = input("Contraseña: ")
-    balance = input("Depósito inicial: ") # comprobar que sea mayor o igual a 500. Obvio, que los billetes sean ingresados a la atm
-    new_account = Account(
-        dni=dni,
-        given_name=given_name,
-        last_name=last_name,
-        address=address,
-        phone_number=phone_number,
-        email=email,
-        password=password,
-        balance=balance
-)
+    while True:
+        print("Ingrese los siguientes datos:")
+        # aqui se debe agregar la logica para verificar que no existe otra cuenta con ese dni, telefono ni email
+        dni = input("DNI: ")
+        if search_account(dni=dni) is not None:
+         print("Ya existe una cuenta con ese DNI.")
+         continue
+
+        given_name = input("Nombre: ")
+        last_name = input("Apellidos: ")
+        address = input("Dirección: ")
+        phone_number = input("Teléfono: ")
+        if search_account(phone_number=phone_number) is not None:
+         print("Ya existe una cuenta con ese número de teléfono.")
+         continue
+
+        email = input("Email: ")
+        if search_account(email=email) is not None:
+         print("Ya existe una cuenta con ese email.")
+         continue
+
+        password = input("Contraseña: ")
+
+        while True:
+           balance = float(input("Depósito inicial: "))
+           if balance >= 500:
+            ingreso_billetes(balance=balance)
+            break                              
+           else:
+                 print("El depósito inicial debe ser mayor o igual a 500. Por favor, inténtalo de nuevo.")
+        
+        new_account = Account(
+          dni=dni,
+          given_name=given_name,
+          last_name=last_name,
+          address=address,
+          phone_number=phone_number,
+          email=email,
+          password=password,
+          balance=balance)
+        account_list.append(new_account)
     
+      # implementar el metodo de quicksort por apellidos a la lista de cuentas
+      # cada que se registre un nuevo cliente
     
-    account_list.append(new_account)
-    
-    # implementar el metodo de quicksort por apellidos a la lista de cuentas
-    # cada que se registre un nuevo cliente
-    
-    print("Registro exitoso!")
+        print("Registro exitoso!")
+        break
+
+    main_menu(new_account)
+
     
 
 def login():
     
     dni = input("\nIngresa tu DNI: ")
     password = input("Ingresa tu contraseña: ")
-
-    # implementar logica para buscar en la lista y comprobar si la cuenta ingresada es la correcta
-    # si encuentra a la cuenta, entonces retornara esta cuenta. Si despues de iterar en la lista
-    # no la encuentra, retornar None
-    # utilzar búsqueda binaria
-    
-    # Nota: Si las entradas coinciden con una registrada, llamar al metodo
-    # main_menu() pasandole el objeto de tipo account: main_menu(account)
+    account = search_account(dni=dni,password=password)
+    account = search_account(dni=dni)
+    if account is not None and account.password == password:
+        system("cls")
+        main_menu(account)
+    else:
+        system("cls")
+        print("DNI o contraseña incorrectos. Por favor, inténtalo de nuevo.")
+        login()
     
 
 def show_balance(account): 
