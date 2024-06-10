@@ -36,7 +36,7 @@ def main():
     elif option == "2":
         register()  
         lista_ordenada = quickSort(account_list,"last_name")
-        mostrarLista(lista_ordenada)   
+        #mostrarLista(lista_ordenada)  (lo puse para comprobar xd) 
 
 def register():
     print("Ingrese los siguientes datos:")
@@ -70,7 +70,7 @@ def register():
     
     print("Registro exitoso!")
     
-def mostrarLista(lista):
+"""def mostrarLista(lista):
     print("═"*120)
     print("DNI".ljust(10," "), end = "| ")
     print("NOMBRE".center(18," "), end = "| ")
@@ -87,7 +87,7 @@ def mostrarLista(lista):
         print(account.phone_number.ljust(15," "), end= "| ")
         print(account.email.upper().ljust(15," "))
         print("-"*120)
-
+"""
 
         
 def quickSort(lista, atributo):
