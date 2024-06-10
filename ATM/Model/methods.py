@@ -35,8 +35,8 @@ def main():
             main_menu(account)
     elif option == "2":
         register()  
-        
-
+        lista_ordenada = quickSort(account_list,"last_name")
+        mostrarLista(lista_ordenada)   
 
 def register():
     print("Ingrese los siguientes datos:")
@@ -63,18 +63,51 @@ def register():
     
     account_list.append(new_account)
     
+    
     # implementar el metodo de quicksort por apellidos a la lista de cuentas
+    
     # cada que se registre un nuevo cliente
     
     print("Registro exitoso!")
     
+def mostrarLista(lista):
+    print("═"*120)
+    print("DNI".ljust(10," "), end = "| ")
+    print("NOMBRE".center(18," "), end = "| ")
+    print("APELLIDO".center(22," "), end = "| ")
+    print("DIRECCIÓN".center(35," "), end = "| ")
+    print("TELÉFONO".center(15," "), end = "| ")
+    print("EMAIL".center(15," "))
+    print("═"*120)
+    for account in lista:
+        print(account.dni.ljust(10," "), end = "| ")
+        print(account.given_name.upper().ljust(18," "), end= "| ")
+        print(account.last_name.upper().ljust(22," "), end= "| ")
+        print(account.address.upper().ljust(35," "), end= "| ")
+        print(account.phone_number.ljust(15," "), end= "| ")
+        print(account.email.upper().ljust(15," "))
+        print("-"*120)
+
+
+        
+def quickSort(lista, atributo):
+    if len(lista) <= 1:
+        return lista
+    else:
+        pivot = lista[len(lista) // 2]
+        left = [x for x in lista if getattr(x, atributo) < getattr(pivot, atributo)]
+        middle = [x for x in lista if getattr(x, atributo) == getattr(pivot, atributo)]
+        right = [x for x in lista if getattr(x, atributo) > getattr(pivot, atributo)]
+        return quickSort(left, atributo) + middle + quickSort(right, atributo)
+
+
 
 def login():
     
     dni = input("\nIngresa tu DNI: ")
     password = input("Ingresa tu contraseña: ")
 
-    # implementar logica para buscar en la lista y comprobar si la cuenta ingresada es la correcta
+    # implementar logsica para buscar en la lista y comprobar si la cuenta ingresada es la correcta
     # si encuentra a la cuenta, entonces retornara esta cuenta. Si despues de iterar en la lista
     # no la encuentra, retornar None
     # utilzar búsqueda binaria
@@ -85,20 +118,30 @@ def login():
 
 def show_balance(account): 
     print(f"Su saldo actual es: {account.balance} soles")
+    
 
 def show_transactions(account):
     print("\nLISTA DE MOVIMIENTOS REGISTRADOS\n")
     transactions = account.transactions
     # agregar codigo para limitar el numero de impresion de transacciones por pasos de 10 o la cantidad
     # que mejor se acomode a la vista. Preguntarle ademas si desea continuar viendo
-    for t in transactions:
-        if t.cuenta_origen_id == account.id_account:
-            other = "" # mostrar datos de a quien hicimos la transaccion
-            print(f"{other.given_name} {other.last_name}        -S/ {t.amount}      {t.date}")
-        else:
-            other = "" # mostrar datos de quien nos hizo la transaccion
-            print(f"{other.given_name} {other.last_name}        S/ {t.amount}       {t.date}")
-
+    num_transactions = len(transactions)
+    steps = 10 #cantidad de transacciones x page
+    for start in range(0, num_transactions, steps):
+        end = start + steps
+        page_transactions = transactions[start:end]    
+        for t in page_transactions:
+            if t.origin_account == account:
+                other = t.destination_account # mostrar datos de a quien hicimos la transaccion
+                print(f"{other.given_name.upper()} {other.last_name.upper()}        -S/ {t.amount}      {t.date}")
+            else:
+                other = t.origin_account # mostrar datos de quien nos hizo la transaccion
+                print(f"{other.given_name.upper()} {other.last_name.upper()}        S/ {t.amount}       {t.date}")
+        if end < num_transactions:
+            continuar_viendo = input("¿Desea continuar viendo más transacciones? (s/n): ")
+            if continuar_viendo.upper() != 'S':
+                break
+        
 def main_menu(account):
     while True:
         print(f"Bienvenido {account.given_name}!")
