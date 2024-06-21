@@ -34,9 +34,11 @@ def ingreso_cajero():
         
         atm_list.append(new_atm)
         print("\033[32m"+"El cajero se ha registrado con éxito."+"\033[m")
+        return
     
     except ValueError:
         print("\031[31m"+"Entrada inválida. Ingrese un valor numérico para la cantidad de billetes."+"\033[m")
+        return
     
 
 # dispensamos billetes de manera iterativa
@@ -66,8 +68,13 @@ def call_dispensador(monto, atm):
 
 def withdraw_money(account, atm):
 
-    #el usuario ingresa el monto
-    user_amount = int(input("\033[33m"+"Ingrese la cantidad que desea retirar: "+"\033[m"))
+    try:
+        #el usuario ingresa el monto
+        user_amount = int(input("\033[33m"+"Ingrese la cantidad que desea retirar: "+"\033[m"))
+    except ValueError:
+        print("\033[31m"+"Entrada inválida. Ingrese un valor numérico porfavor."+"\033[m")
+        return
+
     #comparamos con el dinero que tiene el usuario en su cuenta
     if account.balance < user_amount:
         print("\033[31m"+"No tienes el saldo suficiente para realizar este retiro."+"\033[m")
@@ -125,13 +132,13 @@ def withdraw_money(account, atm):
 atm = None
 def ingreso_billetes(balance): #yo yuleisy modifiqué el codigo de bucchi boy oh yep
     aux = 0
-    print("Los billetes aceptados son [200] [100] [50] [20] [10]")
+    print("\033[35m"+"Los billetes aceptados son [200] [100] [50] [20] [10]"+"\033[m")
     while aux < balance:
         try:
-            billete = float(input("Ingrese los billetes: "))
+            billete = float(input("\033[35m"+"Ingrese los billetes: "+"\033[m"))
             if billete in [200, 100, 50, 20, 10]:
                 if aux + billete > balance:
-                    print(f"No puede exceder el depósito inicial de {balance}. Ingrese un billete menor.")
+                    print("\033[31m"+f"No puede exceder el depósito inicial de {balance}. Ingrese un billete menor."+"\033[m")
                 else:
                     if billete == 200:
                         aux += 200
@@ -150,10 +157,10 @@ def ingreso_billetes(balance): #yo yuleisy modifiqué el codigo de bucchi boy oh
                         atm.bill_ten += 1
                     print(f"Total ingresado: {aux} / {balance}")
             else:
-                print("Billete no aceptado. Intente nuevamente.")
+                print("\033[31m"+"Billete no aceptado. Intente nuevamente."+"\033[m")
         except ValueError:
-            print("Entrada inválida. Ingrese un valor numérico porfavor.")
-    print("Depósito completado.")
+            print("\033[31m"+"Entrada inválida. Ingrese un valor numérico porfavor."+"\033[m")
+    print("\033[32m"+"Depósito completado."+"\033[m")
 
 def binary_search(accounts, target, key):
     low = 0
@@ -188,9 +195,9 @@ company_list.append(new_company)
 
 # menu inicial
 def main():
-    print("\nBienvenid@ a BunnyBank:")
-    print(" 1. Iniciar sesión")
-    print(" 2. Registrarse")       
+    print("\033[32m"+"\nBienvenid@ a BunnyBank:"+"\033[m")
+    print("\033[33m"+" 1. Iniciar sesión")
+    print(" 2. Registrarse"+"\033[m")       
     option = input("Seleccione una opción: ")
     if option == "1":
         account  = login()
@@ -205,41 +212,41 @@ def main():
 
 def register():    
     while True:
-        print("Ingrese los siguientes datos:")
+        print("\033[35m"+"Ingrese los siguientes datos:"+"\033[m")
 
-        dni = input("DNI: ")
+        dni = input("\033[36m"+"DNI: "+"\033[m")
         if search_account(dni=dni) is not None:
-            print("Ya existe una cuenta con ese DNI.")
+            print("\033[31m"+"Ya existe una cuenta con ese DNI."+"\033[m")
             continue
-        given_name = input("Nombre: ")
-        last_name = input("Apellidos: ")
-        address = input("Dirección: ")
+        given_name = input("\033[36m"+"Nombre: "+"\033[m")
+        last_name = input("\033[36m"+"Apellidos: "+"\033[m")
+        address = input("\033[36m"+"Dirección: "+"\033[m")
         while True:
-            phone_number = input("Teléfono: ")        
+            phone_number = input("\033[36m"+"Teléfono: "+"\033[m")        
             if search_account(phone_number=phone_number) is not None:
-                print("Ya existe una cuenta con ese número de teléfono.")
+                print("\033[31m"+"Ya existe una cuenta con ese número de teléfono."+"\033[m")
             else:
                 break
         while True:
-            email = input("Email: ") 
+            email = input("\033[36m"+"Email: "+"\033[m") 
             if search_account(email=email) is not None:
-                print("Ya existe una cuenta con ese email.")
+                print("\033[31m"+"Ya existe una cuenta con ese email."+"\033[m")
             else:
                 break    
         while True:
-            password = input("Contraseña: ")
+            password = input("\033[36m"+"Contraseña: "+"\033[m")
             if search_account(password=password) is not None:
-                print("Esa contraseña ya ha sido utilizada. Por favor, elija otra.")
+                print("\033[31m"+"Esa contraseña ya ha sido utilizada. Por favor, elija otra."+"\033[m")
             else:
                 break    
         while True:
             # comprobar que sea mayor o igual a 500. Obvio, que los billetes sean ingresados a la atm
-            balance = float(input("Depósito inicial: "))
+            balance = float(input("\033[35m"+"Depósito inicial: "+"\033[m"))
             if balance >= 500:
                 ingreso_billetes(balance=balance)
                 break                              
             else:
-                print("El depósito inicial debe ser mayor o igual a 500. Por favor, inténtalo de nuevo.")
+                print("\033[31m"+"El depósito inicial debe ser mayor o igual a 500. Por favor, inténtalo de nuevo."+"\033[m")
         new_account = Account(
             dni=dni,
             given_name=given_name,
@@ -250,12 +257,12 @@ def register():
             password=password,
             balance=balance)
         account_list.append(new_account)
-        print("Registro exitoso!")
-        print(" 1. Ir al menú principal")
-        print(" 2. Registrar otra cuenta")
+        print("\033[32m"+"Registro exitoso!"+"\033[m")
+        print("\033[33m"+" 1. Ir al menú principal")
+        print(" 2. Registrar otra cuenta"+"\033[m")
         while True:  
             try:
-                option_customer =int(input ("Seleccione una opción:"))
+                option_customer =int(input ("\033[35m"+"Seleccione una opción:"+"\033[m"))
                 if option_customer == 1:
                     system('cls')
                     main_menu(new_account)
@@ -263,9 +270,9 @@ def register():
                 if option_customer ==2:
                     break
                 else:
-                    print("Opción no existente. ")
+                    print("\033[31m"+"Opción no existente. "+"\033[m")
             except ValueError:
-                    print("Entrada inválida. Ingrese un número.")
+                    print("\033[31m"+"Entrada inválida. Ingrese un número."+"\033[m")
     
 """def mostrarLista(lista):
     print("═"*120)
@@ -301,8 +308,8 @@ def quickSort(lista, atributo):
 
 
 def login():
-    dni = input("\nIngresa tu DNI: ")
-    password = input("Ingresa tu contraseña: ")
+    dni = input("\033[36m"+"\nIngresa tu DNI: "+"\033[m")
+    password = input("\033[36m"+"Ingresa tu contraseña: "+"\033[m")
     account = search_account(dni=dni,password=password)
     account = search_account(dni=dni)
     if account is not None and account.password == password:
@@ -310,7 +317,7 @@ def login():
         main_menu(account)
     else:
         system("cls")
-        print("DNI o contraseña incorrectos. Por favor, inténtalo de nuevo.")
+        print("\033[31m"+"DNI o contraseña incorrectos. Por favor, inténtalo de nuevo."+"\033[m")
         login()
     
 
@@ -324,11 +331,11 @@ def login():
     
 
 def show_balance(account): 
-    print(f"Su saldo actual es: {account.balance} soles")
+    print("\033[32m"+f"Su saldo actual es: {account.balance} soles"+"\033[m")
     
 
 def show_transactions(account):
-    print("\nLISTA DE MOVIMIENTOS REGISTRADOS\n")
+    print("\033[33m"+"\nLISTA DE MOVIMIENTOS REGISTRADOS\n"+"\033[m")
     transactions = account.transactions
     # agregar codigo para limitar el numero de impresion de transacciones por pasos de 10 o la cantidad
     # que mejor se acomode a la vista. Preguntarle ademas si desea continuar viendo
@@ -351,12 +358,12 @@ def show_transactions(account):
         
 def main_menu(account):
     while True:
-        print(f"Bienvenido {account.given_name}!")
-        print("1. Ver saldo")
+        print("\033[32m"+f"Bienvenido {account.given_name}!"+"\033[m")
+        print("\033[33m"+"1. Ver saldo")
         print("2. Ver transacciones")
         print("3. Hacer una transferencia")
         print("4. Pagar un servicio")
-        print("5. Retirar dinero")
+        print("5. Retirar dinero"+"\033[m")
         print("\033[31m"+"6. Salir"+"\033[m")
         
         option = input("Seleccione una opción: ")
@@ -375,17 +382,17 @@ def main_menu(account):
             break
 
         else:
-            print("Opción no válida")
+            print("\033[31m"+"Opción no válida"+"\033[m")
 
         input("\nPresione Enter para continuar...")
 
 def make_transfer(account):
-    destination_dni = input("Ingrese el DNI del destinatario: ") 
+    destination_dni = input("\033[36m"+"Ingrese el DNI del destinatario: "+"\033[m") 
     # comprobar que la cuenta existe. Si no existe, salir del metodo. Utilizar el if general
     # puesto aquí. Para su "else" imprimir el mensaje de que esa cuenta no existe
     destination_account = ""
     if destination_account == "existe": # obvio, no se va a comparar con "existe" xddd
-        amount = float(input("Ingrese el monto a transferir: "))
+        amount = float(input("\033[36m"+"Ingrese el monto a transferir: "+"\033[m"))
 
         if account.balance >= amount:
             account.balance -= amount
@@ -401,21 +408,21 @@ def make_transfer(account):
             # agragar la transaccion a la lista de transacciones
             # tanto del que la hace como el que la recibe
             
-            print("Transferencia exitosa!")
+            print("\033[32m"+"Transferencia exitosa!"+"\033[m")
         else:
-            print("Saldo insuficiente")
+            print("\033[31m"+"Saldo insuficiente"+"\033[m")
     else:
-        print("Cuenta de destinatario no encontrada")
+        print("\033[31m"+"Cuenta de destinatario no encontrada"+"\033[m")
 
 def pay_service(account):
     
     # agregar logica para mostrar la lista de empresas: RUC y nombre comercial (tradename)
     
-    ruc = input("Ingrese el RUC de la empresa de servicio: ")
+    ruc = input("\033[35m"+"Ingrese el RUC de la empresa de servicio: "+"\033[m")
     
     company = "search_company(ruc)" # devolver el objeto de tipo company o None con el metodo de busqueda binaria
     if company != None:
-        amount = float(input("Ingrese el monto a pagar: "))
+        amount = float(input("\033[36m"+"Ingrese el monto a pagar: "+"\033[m"))
         if account.balance >= amount:
             account.balance -= amount
             company.balance += amount            
@@ -427,12 +434,12 @@ def pay_service(account):
             )
             account.services_pay.append(new_servicepay)
             company.services_pay.append(new_servicepay)
-            print("Pago de servicio exitoso!")
+            print("\033[32m"+"Pago de servicio exitoso!"+"\033[m")
         else:
-            print("Saldo insuficiente")
+            print("\033[31m"+"Saldo insuficiente"+"\033[m")
         
     else:
-        print("Empresa de servicio no encontrada")
+        print("\033[31m"+"Empresa de servicio no encontrada"+"\033[m")
 
 
 # buenas practicas jeje
