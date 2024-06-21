@@ -11,11 +11,116 @@ account_list = []
 company_list = []
 atm_list = []
 
-# creamos 5 cajeros xd
-cities = ["JR. Amazonas 344", "Av. Miraflores 655", "Av. Larco 280", "Ov. Marinera 110", "Plazuela el Recreo 120"]
-for i in range(5):
+# creamos 10 cajeros xd
+cities = ["JR. Amazonas 344", "Av. Miraflores 655", "Av. Larco 280", "Ov. Marinera 110", "Plazuela el Recreo 120", 
+          "Av. César Vallejo 202", "Jr. Gamarra 518", "408 Av. Carlos Valderrama","1355 Av. Húsares de Junín", "1595 Av. Larco" ]
+for i in range(10):
     new_atm = ATM(i,cities[i], 20 * i, 25 * i, 18 * i, 33 * i , 28 * i)
     atm_list.append(new_atm)
+
+
+#Ingresamos el cajero junto con su dinero
+def ingreso_cajero():
+    try:
+        address = input("Ingrese la dirección del cajero: ")
+        number_bill_two_hundred = int(input("Ingrese la cantidad de billetes de 200 que tiene el cajero: ")) 
+        number_bill_one_hundred  = int(input("Ingrese la cantidad de billetes de 100 que tiene el cajero: "))
+        number_bill_fifty = int(input("Ingrese la cantidad de billetes de 50 que tiene el cajero: "))
+        number_bill_twenty = int(input("Ingrese la cantidad de billetes de 20 que tiene el cajero: "))
+        number_bill_ten = int(input("Ingrese la cantidad de billetes de 10 que tiene el cajero: "))
+        
+
+        new_atm = ATM(address, number_bill_two_hundred, number_bill_one_hundred, number_bill_fifty, number_bill_twenty, number_bill_ten)
+        
+        atm_list.append(new_atm)
+        print("\033[32m"+"El cajero se ha registrado con éxito."+"\033[m")
+    
+    except ValueError:
+        print("\031[31m"+"Entrada inválida. Ingrese un valor numérico para la cantidad de billetes."+"\033[m")
+    
+
+# dispensamos billetes de manera iterativa
+def dispensador(monto, billetes):
+    billsel = []
+    for bill, count in billetes:
+        while monto >= bill and count > 0:
+            billsel.append(bill)
+            monto -= bill
+            count -= 1
+    if monto == 0:
+        return billsel
+    else:
+        return None
+
+# calculamos cuantos billetes tiene el atm
+def call_dispensador(monto, atm):
+    billetes = [
+        [200, atm.bill_two_hundred],
+        [100, atm.bill_one_hundred],
+        [50, atm.bill_fifty],
+        [20, atm.bill_twenty],
+        [10, atm.bill_ten]
+    ]
+    #llamamos al dispensador
+    return dispensador(monto, billetes)
+
+def withdraw_money(account, atm):
+
+    #el usuario ingresa el monto
+    user_amount = int(input("\033[33m"+"Ingrese la cantidad que desea retirar: "+"\033[m"))
+    #comparamos con el dinero que tiene el usuario en su cuenta
+    if account.balance < user_amount:
+        print("\033[31m"+"No tienes el saldo suficiente para realizar este retiro."+"\033[m")
+        return
+
+    # creamos una variable total cash donde se almacenara la suma de el dinero del cajero
+    total_cash = sum([
+        atm.bill_two_hundred * 200,
+        atm.bill_one_hundred * 100,
+        atm.bill_fifty * 50,
+        atm.bill_twenty * 20,
+        atm.bill_ten * 10
+    ])
+    #con esa variable comparamos y verificamos si el cajero tiene el dinero suficiente para retirar ese monto
+    if total_cash < user_amount:
+        print("\033[31m"+"El cajero no tiene suficiente dinero para este retiro."+"\033[m")
+        return
+
+    # calculamos los billetes a dispensar
+    bills_to_dispense = {200: 0, 100: 0, 50: 0, 20: 0, 10: 0}
+    remaining_amount = user_amount
+
+    # llamamos a la funcion para que dispense el dinero
+    bills = call_dispensador(user_amount, atm)
+
+    if bills is None:
+        print("\033[31m"+"No se pueden dispensar los billetes necesarios. Intenta con otro monto."+"\033[m")
+        return
+
+    # actualizamos la cantidad de billetes a dispensar
+    for bill in bills:
+        bills_to_dispense[bill] += 1
+        #actualizamos la cantidad de billetes que se reducen del atm
+        if bill == 200:
+            atm.bill_two_hundred -= 1
+        elif bill == 100:
+            atm.bill_one_hundred -= 1
+        elif bill == 50:
+            atm.bill_fifty -= 1
+        elif bill == 20:
+            atm.bill_twenty -= 1
+        elif bill == 10:
+            atm.bill_ten -= 1
+
+    # actualizamos el saldo del usuario
+    account.balance -= user_amount
+
+    # mostramos los billetes a dispensar
+    print("\033[32m"+"Retiro exitoso, recibiras: "+"\033[m")
+    for bill, count in bills_to_dispense.items():
+        if count > 0:
+            print(f"{count} billetes de {bill} soles")
+
     
 atm = None
 def ingreso_billetes(balance): #yo yuleisy modifiqué el codigo de bucchi boy oh yep
@@ -47,7 +152,7 @@ def ingreso_billetes(balance): #yo yuleisy modifiqué el codigo de bucchi boy oh
             else:
                 print("Billete no aceptado. Intente nuevamente.")
         except ValueError:
-            print("Entrada inválida. Ingrese un valor numérico.")
+            print("Entrada inválida. Ingrese un valor numérico porfavor.")
     print("Depósito completado.")
 
 def binary_search(accounts, target, key):
@@ -251,7 +356,8 @@ def main_menu(account):
         print("2. Ver transacciones")
         print("3. Hacer una transferencia")
         print("4. Pagar un servicio")
-        print("5. Salir")
+        print("5. Retirar dinero")
+        print("\033[31m"+"6. Salir"+"\033[m")
         
         option = input("Seleccione una opción: ")
         
@@ -264,7 +370,10 @@ def main_menu(account):
         elif option == "4":
             pay_service(account)
         elif option == "5":
+            withdraw_money(account, atm)
+        elif option == "6":
             break
+
         else:
             print("Opción no válida")
 
