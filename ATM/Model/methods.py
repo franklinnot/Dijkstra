@@ -95,7 +95,7 @@ def withdraw_money(account, atm):
 
     # calculamos los billetes a dispensar
     bills_to_dispense = {200: 0, 100: 0, 50: 0, 20: 0, 10: 0}
-    remaining_amount = user_amount
+    remaining_amount = user_amount # ESTo ES NECESARIO ?
 
     # llamamos a la funcion para que dispense el dinero
     bills = call_dispensador(user_amount, atm)
@@ -177,7 +177,8 @@ def binary_search(accounts, target, key):
     return None
 
 def search_account(dni=None, email=None, phone_number=None,password=None):
-    account_list
+    # account_list
+    ordenar_cuentas_por_dni()
     if dni is not None:
         return binary_search(account_list, dni, 'dni')
     elif email is not None:
@@ -188,11 +189,49 @@ def search_account(dni=None, email=None, phone_number=None,password=None):
         return binary_search(account_list,password,'password')
     else:
         return None
+    
 # creamos una empresa xd
-new_company = Company("878", "Quavii", "Quavii SAC", "Ov. Marina 423", "925584321", "quavii@gmail.com", 6700.0)
-company_list.append(new_company)
+new_company = [
+    Company("878", "Quavii", "Quavii S.A.C.", "Ov. Marina 423", "925584321", "quavii@gmail.com.pe", 6700.0),
+    Company("540", "Hidrandina", "Hidrandina S.A.", "Jr. San Martin 831", "948327474", "atencionhdna@distriluz.com.pe", 9700.0),
+    Company("123", "Movistar", "Telefónica del Perú S.A.A.", "Av. Arequipa 1155", "980011800", "movistar@telefonica.com", 8500.0),
+    Company("456", "Luz del Sur", "Luz del Sur S.A.A.", "Av. Canaval y Moreyra 380", "926175000", "info@luzdelsur.com.pe", 12000.0),
+    Company("789", "Sedapal", "Servicio de Agua Potable y Alcantarillado de Lima S.A.", "Av. Alcazar 1154", "973256923", "info@sedapal.com.pe", 7500.0),
+    Company("987", "Cálidda", "Cálidda S.A.C.", "Av. Juan de Arona 786", "906101515", "atencion@calidda.com.pe", 6500.0),
+    Company("654", "Claro", "América Móvil Perú S.A.C.", "Av. Nicolás de Piérola 480", "945549780", "atencion@claro.com.pe", 7800.0),
+    Company("321", "Entel", "Entel Perú S.A.", "Av. República de Panamá 3531", "980189834", "atencion@entel.pe", 8000.0),
+    Company("543", "AquaSur", "AquaSur S.A.", "Av. La Marina 2100", "955600230", "aquasur@gmail.com.pe", 7000.0),
+    Company("654", "Gas Natural Fenosa", "Gas Natural de Lima y Callao S.A.", "Av. Paseo de la República 3245", "968753297", "atencion@gasnaturalfenosa.com.pe", 7200.0),
+    Company("765", "Bitel", "Viettel Perú S.A.C.", "Av. Pardo y Aliaga 640", "947051904", "info@bitel.com.pe", 6900.0)
+    ]
+for company in new_company: 
+    company_list.append(company)
 
 
+def search_company(ruc=None):
+    if ruc is not None:
+        return binary_search (company_list, ruc, 'ruc')
+    else:
+        return None
+# implementar el metodo de quicksort por apellidos a la lista de cuentas
+# cada que se registre un nuevo cliente
+        
+def quickSort(lista, atributo):
+    if len(lista) <= 1:
+        return lista
+    else:
+        pivot = lista[len(lista) // 2]
+        left = [x for x in lista if getattr(x, atributo) < getattr(pivot, atributo)]
+        middle = [x for x in lista if getattr(x, atributo) == getattr(pivot, atributo)]
+        right = [x for x in lista if getattr(x, atributo) > getattr(pivot, atributo)]
+        return quickSort(left, atributo) + middle + quickSort(right, atributo)
+
+# 🎀 Esto en español xd , necesario para buscar debido al tipo de método de búsqueda :D
+def ordenar_cuentas_por_dni():
+    global account_list
+    account_list = quickSort(account_list, 'dni')
+    
+    
 # menu inicial
 def main():
     print("\033[32m"+"\nBienvenid@ a BunnyBank:"+"\033[m")
@@ -206,9 +245,8 @@ def main():
         if account != None:
             main_menu(account)
     elif option == "2":
-        register()  
-        lista_ordenada = quickSort(account_list,"last_name")        
-        #mostrarLista(lista_ordenada)  #(lo puse para comprobar xd) 
+        register()
+        # mostrarLista(lista_ordenada)  #(lo puse para comprobar xd) 
 
 def register():    
     while True:
@@ -242,11 +280,14 @@ def register():
         while True:
             # comprobar que sea mayor o igual a 500. Obvio, que los billetes sean ingresados a la atm
             balance = float(input("\033[35m"+"Depósito inicial: "+"\033[m"))
-            if balance >= 500:
+            if balance >= 500 and call_dispensador(balance,atm):
                 ingreso_billetes(balance=balance)
                 break                              
             else:
-                print("\033[31m"+"El depósito inicial debe ser mayor o igual a 500. Por favor, inténtalo de nuevo."+"\033[m")
+                print("\033[31m"+"Depósito inicial iválido."+"\033[m")
+                print("\033[31m"+"El depósito inicial debe ser mayor o igual a 500."+"\033[m")
+                print("\033[31m"+"No se admite monedas!"+"\033[m")
+                print("\033[31m"+"Por favor, inténtalo de nuevo."+"\033[m")
         new_account = Account(
             dni=dni,
             given_name=given_name,
@@ -257,6 +298,7 @@ def register():
             password=password,
             balance=balance)
         account_list.append(new_account)
+        ordenar_cuentas_por_dni() 
         print("\033[32m"+"Registro exitoso!"+"\033[m")
         print("\033[33m"+" 1. Ir al menú principal")
         print(" 2. Registrar otra cuenta"+"\033[m")
@@ -274,54 +316,36 @@ def register():
             except ValueError:
                     print("\033[31m"+"Entrada inválida. Ingrese un número."+"\033[m")
     
-"""def mostrarLista(lista):
-    print("═"*120)
-    print("DNI".ljust(10," "), end = "| ")
-    print("NOMBRE".center(18," "), end = "| ")
-    print("APELLIDO".center(22," "), end = "| ")
-    print("DIRECCIÓN".center(35," "), end = "| ")
-    print("TELÉFONO".center(15," "), end = "| ")
-    print("EMAIL".center(15," "))
-    print("═"*120)
-    for account in lista:
-        print(account.dni.ljust(10," "), end = "| ")
-        print(account.given_name.upper().ljust(18," "), end= "| ")
-        print(account.last_name.upper().ljust(22," "), end= "| ")
-        print(account.address.upper().ljust(35," "), end= "| ")
-        print(account.phone_number.ljust(15," "), end= "| ")
-        print(account.email.upper().ljust(15," "))
-        print("-"*120)
-"""
-# implementar el metodo de quicksort por apellidos a la lista de cuentas
-    
-# cada que se registre un nuevo cliente
-        
-def quickSort(lista, atributo):
-    if len(lista) <= 1:
-        return lista
-    else:
-        pivot = lista[len(lista) // 2]
-        left = [x for x in lista if getattr(x, atributo) < getattr(pivot, atributo)]
-        middle = [x for x in lista if getattr(x, atributo) == getattr(pivot, atributo)]
-        right = [x for x in lista if getattr(x, atributo) > getattr(pivot, atributo)]
-        return quickSort(left, atributo) + middle + quickSort(right, atributo)
-
 
 def login():
-    dni = input("\033[36m"+"\nIngresa tu DNI: "+"\033[m")
-    password = input("\033[36m"+"Ingresa tu contraseña: "+"\033[m")
-    account = search_account(dni=dni,password=password)
-    account = search_account(dni=dni)
-    if account is not None and account.password == password:
-        system("cls")
-        main_menu(account)
-    else:
-        system("cls")
-        print("\033[31m"+"DNI o contraseña incorrectos. Por favor, inténtalo de nuevo."+"\033[m")
-        login()
-    
+    # En ingles por que zi :D
+    attempts = 2  # 🎀 Le daré hasta 2 oportunidades al usuario 🎀
 
-    # implementar logsica para buscar en la lista y comprobar si la cuenta ingresada es la correcta
+    for attempt in range(attempts): # Iteramos ...
+        dni = input("\033[36m"+"\nIngresa tu DNI: "+"\033[m")
+        password = input("\033[36m"+"Ingresa tu contraseña: "+"\033[m")
+        ordenar_cuentas_por_dni() 
+        account = search_account(dni=dni, password=password)
+        account = search_account(dni=dni)
+        
+        if account is not None and account.password == password:
+            system("cls")
+            main_menu(account)
+            return  # Salir de la función después de un inicio de sesión exitoso
+        else:
+            system("cls")
+            print("\033[31m"+"DNI o contraseña incorrectos. Por favor, inténtalo de nuevo."+"\033[m")
+            # No considero necesario que se llame al login, se ingresa infinitamente
+            # y no hay forma de salir despues xd
+            # login() 
+    
+    # Si llega aquí... es porque el usuario es un ... falló ambos intentos :D
+    system("cls")
+    print("\033[1;33m"+"¿Estás registrado? ... ¿ SEGURO ?"+'\033[0;m') 
+
+    main()  # Llamar al método main después de fallar ambos intentos
+    
+    # implementar logica para buscar en la lista y comprobar si la cuenta ingresada es la correcta
     # si encuentra a la cuenta, entonces retornara esta cuenta. Si despues de iterar en la lista
     # no la encuentra, retornar None
     # utilzar búsqueda binaria
@@ -386,12 +410,15 @@ def main_menu(account):
 
         input("\nPresione Enter para continuar...")
 
+        
 def make_transfer(account):
+          
     destination_dni = input("\033[36m"+"Ingrese el DNI del destinatario: "+"\033[m") 
-    # comprobar que la cuenta existe. Si no existe, salir del metodo. Utilizar el if general
-    # puesto aquí. Para su "else" imprimir el mensaje de que esa cuenta no existe
-    destination_account = ""
-    if destination_account == "existe": # obvio, no se va a comparar con "existe" xddd
+    # 🎀 Busca la cuenta de destino usando el DNI 🎀
+    ordenar_cuentas_por_dni() 
+    destination_account = search_account(dni = destination_dni)
+    
+    if destination_account is not None: 
         amount = float(input("\033[36m"+"Ingrese el monto a transferir: "+"\033[m"))
 
         if account.balance >= amount:
@@ -405,8 +432,10 @@ def make_transfer(account):
                 atm = atm
             )
 
-            # agragar la transaccion a la lista de transacciones
-            # tanto del que la hace como el que la recibe
+            # 🎀 Agregar la transacción a la lista 
+            # de transacciones de ambas cuentas 🎀
+            account.transactions.append(new_transaction)
+            destination_account.transactions.append(new_transaction)
             
             print("\033[32m"+"Transferencia exitosa!"+"\033[m")
         else:
@@ -414,18 +443,29 @@ def make_transfer(account):
     else:
         print("\033[31m"+"Cuenta de destinatario no encontrada"+"\033[m")
 
+# 🎀 Me aseguro de tener la lista de empresas ordenadas por RUC, para así
+# Poder generar correctamente la busqueda - Recordar que el metodo de busqueda
+# binaria, funciona correctamente con una lista previamente ordenada.
+company_list = quickSort(company_list, 'ruc')
+
 def pay_service(account):
     
     # agregar logica para mostrar la lista de empresas: RUC y nombre comercial (tradename)
-    
+    # 🎀 Mostrar la lista de empresas
+    print("\033[35m" + "Lista de empresas disponibles:" + "\033[m")
+    for company in company_list:
+        print(f"RUC: {company.ruc}, Nombre Comercial: {company.tradename}")
+
     ruc = input("\033[35m"+"Ingrese el RUC de la empresa de servicio: "+"\033[m")
+    # Buscar la empresa por RUC
+    company = search_company(ruc = ruc)
     
-    company = "search_company(ruc)" # devolver el objeto de tipo company o None con el metodo de busqueda binaria
     if company != None:
         amount = float(input("\033[36m"+"Ingrese el monto a pagar: "+"\033[m"))
         if account.balance >= amount:
             account.balance -= amount
-            company.balance += amount            
+            company.balance += amount  
+            
             new_servicepay = ServicePay(
                 amount=amount,
                 origin_account=account,
@@ -434,10 +474,10 @@ def pay_service(account):
             )
             account.services_pay.append(new_servicepay)
             company.services_pay.append(new_servicepay)
+            
             print("\033[32m"+"Pago de servicio exitoso!"+"\033[m")
         else:
             print("\033[31m"+"Saldo insuficiente"+"\033[m")
-        
     else:
         print("\033[31m"+"Empresa de servicio no encontrada"+"\033[m")
 

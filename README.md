@@ -34,9 +34,9 @@ C) Login
 
 
 
-D) Utilizando el metodo generico de busqueda, terminar el metodo de "make_transfer" cuyas instrucciones se encuentran dentro.
+D) Utilizando el metodo generico de busqueda, terminar el metodo de "make_transfer" cuyas instrucciones se encuentran dentro. (listop)
 
-D) pay_service: Método de busqueda binaria de empresa  por ruc.  Si existe que devuelva un objeto de tipo Company, caso contrario devolver None. 
+D) pay_service: Método de busqueda binaria de empresa  por ruc.  Si existe que devuelva un objeto de tipo Company, caso contrario devolver None. (listop)
 
 D) Agregar empresas de los siguientes servicios: internet, electricidad, agua potable, gas natural, telefonia (si la empresa ofrece mas de un servicio solo colocarlo una vez, no es necesario especeficiar su rubro)
 
