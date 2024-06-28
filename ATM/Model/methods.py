@@ -40,7 +40,6 @@ def ingreso_cajero():
         print("\031[31m"+"Entrada inválida. Ingrese un valor numérico para la cantidad de billetes."+"\033[m")
         return
     
-
 # dispensamos billetes de manera iterativa
 def dispensador(monto, billetes):
     billsel = []
@@ -316,7 +315,6 @@ def register():
             except ValueError:
                     print("\033[31m"+"Entrada inválida. Ingrese un número."+"\033[m")
     
-
 def login():
     # En ingles por que zi :D
     attempts = 2  # 🎀 Le daré hasta 2 oportunidades al usuario 🎀
@@ -357,7 +355,6 @@ def login():
 def show_balance(account): 
     print("\033[32m"+f"Su saldo actual es: {account.balance} soles"+"\033[m")
     
-
 def show_transactions(account):
     print("\033[33m"+"\nLISTA DE MOVIMIENTOS REGISTRADOS\n"+"\033[m")
     transactions = account.transactions
@@ -409,12 +406,9 @@ def main_menu(account):
             print("\033[31m"+"Opción no válida"+"\033[m")
 
         input("\nPresione Enter para continuar...")
-
         
 def make_transfer(account):
-          
     destination_dni = input("\033[36m"+"Ingrese el DNI del destinatario: "+"\033[m") 
-    # 🎀 Busca la cuenta de destino usando el DNI 🎀
     ordenar_cuentas_por_dni() 
     destination_account = search_account(dni = destination_dni)
     
@@ -432,16 +426,26 @@ def make_transfer(account):
                 atm = atm
             )
 
-            # 🎀 Agregar la transacción a la lista 
-            # de transacciones de ambas cuentas 🎀
             account.transactions.append(new_transaction)
             destination_account.transactions.append(new_transaction)
             
             print("\033[32m"+"Transferencia exitosa!"+"\033[m")
+
+            # Solicitar billetes para el depósito
+            print("\033[35m"+"Ingrese los billetes a depositar:"+"\033[m")
+            cantidad_billetes = {
+                200: int(input("\033[35m"+"Billetes de 200: "+"\033[m")),
+                100: int(input("\033[35m"+"Billetes de 100: "+"\033[m")),
+                50: int(input("\033[35m"+"Billetes de 50: "+"\033[m")),
+                20: int(input("\033[35m"+"Billetes de 20: "+"\033[m")),
+                10: int(input("\033[35m"+"Billetes de 10: "+"\033[m"))
+            }
+            receive_money(atm, cantidad_billetes)
         else:
             print("\033[31m"+"Saldo insuficiente"+"\033[m")
     else:
         print("\033[31m"+"Cuenta de destinatario no encontrada"+"\033[m")
+
 
 # 🎀 Me aseguro de tener la lista de empresas ordenadas por RUC, para así
 # Poder generar correctamente la busqueda - Recordar que el metodo de busqueda
@@ -449,15 +453,11 @@ def make_transfer(account):
 company_list = quickSort(company_list, 'ruc')
 
 def pay_service(account):
-    
-    # agregar logica para mostrar la lista de empresas: RUC y nombre comercial (tradename)
-    # 🎀 Mostrar la lista de empresas
     print("\033[35m" + "Lista de empresas disponibles:" + "\033[m")
     for company in company_list:
         print(f"RUC: {company.ruc}, Nombre Comercial: {company.tradename}")
 
     ruc = input("\033[35m"+"Ingrese el RUC de la empresa de servicio: "+"\033[m")
-    # Buscar la empresa por RUC
     company = search_company(ruc = ruc)
     
     if company != None:
@@ -476,11 +476,45 @@ def pay_service(account):
             company.services_pay.append(new_servicepay)
             
             print("\033[32m"+"Pago de servicio exitoso!"+"\033[m")
+
+            # Solicitar billetes para el depósito
+            print("\033[35m"+"Ingrese los billetes a depositar:"+"\033[m")
+            cantidad_billetes = {
+                200: int(input("\033[35m"+"Billetes de 200: "+"\033[m")),
+                100: int(input("\033[35m"+"Billetes de 100: "+"\033[m")),
+                50: int(input("\033[35m"+"Billetes de 50: "+"\033[m")),
+                20: int(input("\033[35m"+"Billetes de 20: "+"\033[m")),
+                10: int(input("\033[35m"+"Billetes de 10: "+"\033[m"))
+            }
+            receive_money(atm, cantidad_billetes)
         else:
             print("\033[31m"+"Saldo insuficiente"+"\033[m")
     else:
         print("\033[31m"+"Empresa de servicio no encontrada"+"\033[m")
 
+
+#Metodo para recibir el dinero
+def receive_money(atm, cantidad_billetes):
+    """
+    Función para recibir dinero y actualizar el ATM con la cantidad de billetes recibidos.
+    cantidad_billetes es un diccionario con las denominaciones y la cantidad de billetes.
+    Ejemplo: {200: 3, 100: 5, 50: 2, 20: 1, 10: 4}
+    """
+    for denominacion, cantidad in cantidad_billetes.items():
+        if denominacion == 200:
+            atm.bill_two_hundred += cantidad
+        elif denominacion == 100:
+            atm.bill_one_hundred += cantidad
+        elif denominacion == 50:
+            atm.bill_fifty += cantidad
+        elif denominacion == 20:
+            atm.bill_twenty += cantidad
+        elif denominacion == 10:
+            atm.bill_ten += cantidad
+        else:
+            print("\033[31m"+"Denominación de billete no aceptada: " + str(denominacion) + "\033[m")
+
+    print("\033[32m"+"Dinero recibido y cajero actualizado."+"\033[m")
 
 # buenas practicas jeje
 if __name__ == "__main__":
