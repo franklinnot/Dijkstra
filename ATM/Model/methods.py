@@ -408,43 +408,40 @@ def main_menu(account):
         input("\nPresione Enter para continuar...")
         
 def make_transfer(account):
-    destination_dni = input("\033[36m"+"Ingrese el DNI del destinatario: "+"\033[m") 
-    ordenar_cuentas_por_dni() 
-    destination_account = search_account(dni = destination_dni)
-    
-    if destination_account is not None: 
-        amount = float(input("\033[36m"+"Ingrese el monto a transferir: "+"\033[m"))
-
-        if account.balance >= amount:
-            account.balance -= amount
-            destination_account.balance += amount
-                
-            new_transaction = Transaction(
-                amount = amount,
-                origin_account = account,
-                destination_account = destination_account,
-                atm = atm
-            )
-
-            account.transactions.append(new_transaction)
-            destination_account.transactions.append(new_transaction)
+    try:
+        destination_dni = input("\033[36m"+"Ingrese el DNI del destinatario: "+"\033[m") 
+        ordenar_cuentas_por_dni() 
+        destination_account = search_account(dni=destination_dni)
+        
+        if destination_account is not None: 
+            amount = float(input("\033[36m"+"Ingrese el monto a transferir: "+"\033[m"))
             
-            print("\033[32m"+"Transferencia exitosa!"+"\033[m")
+            if amount <= 0:
+                print("\033[31m"+"El monto debe ser mayor a cero."+"\033[m")
+                return
 
-            # Solicitar billetes para el depósito
-            print("\033[35m"+"Ingrese los billetes a depositar:"+"\033[m")
-            cantidad_billetes = {
-                200: int(input("\033[35m"+"Billetes de 200: "+"\033[m")),
-                100: int(input("\033[35m"+"Billetes de 100: "+"\033[m")),
-                50: int(input("\033[35m"+"Billetes de 50: "+"\033[m")),
-                20: int(input("\033[35m"+"Billetes de 20: "+"\033[m")),
-                10: int(input("\033[35m"+"Billetes de 10: "+"\033[m"))
-            }
-            receive_money(atm, cantidad_billetes)
+            if account.balance >= amount:
+                account.balance -= amount
+                destination_account.balance += amount
+                    
+                new_transaction = Transaction(
+                    amount=amount,
+                    origin_account=account,
+                    destination_account=destination_account,
+                    atm=atm
+                )
+
+                account.transactions.append(new_transaction)
+                destination_account.transactions.append(new_transaction)
+                
+                print("\033[32m"+"Transferencia exitosa!"+"\033[m")
+            else:
+                print("\033[31m"+"Saldo insuficiente"+"\033[m")
         else:
-            print("\033[31m"+"Saldo insuficiente"+"\033[m")
-    else:
-        print("\033[31m"+"Cuenta de destinatario no encontrada"+"\033[m")
+            print("\033[31m"+"Cuenta de destinatario no encontrada"+"\033[m")
+    
+    except ValueError:
+        print("\033[31m"+"Entrada inválida. Ingrese un valor numérico para el monto."+"\033[m")
 
 
 # 🎀 Me aseguro de tener la lista de empresas ordenadas por RUC, para así
@@ -453,68 +450,100 @@ def make_transfer(account):
 company_list = quickSort(company_list, 'ruc')
 
 def pay_service(account):
-    print("\033[35m" + "Lista de empresas disponibles:" + "\033[m")
-    for company in company_list:
-        print(f"RUC: {company.ruc}, Nombre Comercial: {company.tradename}")
+    try:
+        print("\033[35m" + "Lista de empresas disponibles:" + "\033[m")
+        for company in company_list:
+            print(f"RUC: {company.ruc}, Nombre Comercial: {company.tradename}")
 
-    ruc = input("\033[35m"+"Ingrese el RUC de la empresa de servicio: "+"\033[m")
-    company = search_company(ruc = ruc)
-    
-    if company != None:
-        amount = float(input("\033[36m"+"Ingrese el monto a pagar: "+"\033[m"))
-        if account.balance >= amount:
-            account.balance -= amount
-            company.balance += amount  
+        ruc = input("\033[35m"+"Ingrese el RUC de la empresa de servicio: "+"\033[m")
+        company = search_company(ruc=ruc)
+        
+        if company is not None:
+            amount = float(input("\033[36m"+"Ingrese el monto a pagar: "+"\033[m"))
             
-            new_servicepay = ServicePay(
-                amount=amount,
-                origin_account=account,
-                destination_company=company,
-                atm=atm 
-            )
-            account.services_pay.append(new_servicepay)
-            company.services_pay.append(new_servicepay)
+            if amount <= 0:
+                print("\033[31m"+"El monto debe ser mayor a cero."+"\033[m")
+                return
             
-            print("\033[32m"+"Pago de servicio exitoso!"+"\033[m")
-
-            # Solicitar billetes para el depósito
-            print("\033[35m"+"Ingrese los billetes a depositar:"+"\033[m")
-            cantidad_billetes = {
-                200: int(input("\033[35m"+"Billetes de 200: "+"\033[m")),
-                100: int(input("\033[35m"+"Billetes de 100: "+"\033[m")),
-                50: int(input("\033[35m"+"Billetes de 50: "+"\033[m")),
-                20: int(input("\033[35m"+"Billetes de 20: "+"\033[m")),
-                10: int(input("\033[35m"+"Billetes de 10: "+"\033[m"))
-            }
-            receive_money(atm, cantidad_billetes)
+            if account.balance >= amount:
+                account.balance -= amount
+                company.balance += amount  
+                
+                new_servicepay = ServicePay(
+                    amount=amount,
+                    origin_account=account,
+                    destination_company=company,
+                    atm=atm 
+                )
+                account.services_pay.append(new_servicepay)
+                company.services_pay.append(new_servicepay)
+                
+                print("\033[32m"+"Pago de servicio exitoso!"+"\033[m")
+            else:
+                print("\033[31m"+"Saldo insuficiente"+"\033[m")
         else:
-            print("\033[31m"+"Saldo insuficiente"+"\033[m")
-    else:
-        print("\033[31m"+"Empresa de servicio no encontrada"+"\033[m")
+            print("\033[31m"+"Empresa de servicio no encontrada"+"\033[m")
+    
+    except ValueError:
+        print("\033[31m"+"Entrada inválida. Ingrese un valor numérico para el monto."+"\033[m")
 
 
 #Metodo para recibir el dinero
-def receive_money(atm, cantidad_billetes):
-    """
-    Función para recibir dinero y actualizar el ATM con la cantidad de billetes recibidos.
-    cantidad_billetes es un diccionario con las denominaciones y la cantidad de billetes.
-    Ejemplo: {200: 3, 100: 5, 50: 2, 20: 1, 10: 4}
-    """
-    for denominacion, cantidad in cantidad_billetes.items():
-        if denominacion == 200:
-            atm.bill_two_hundred += cantidad
-        elif denominacion == 100:
-            atm.bill_one_hundred += cantidad
-        elif denominacion == 50:
-            atm.bill_fifty += cantidad
-        elif denominacion == 20:
-            atm.bill_twenty += cantidad
-        elif denominacion == 10:
-            atm.bill_ten += cantidad
-        else:
-            print("\033[31m"+"Denominación de billete no aceptada: " + str(denominacion) + "\033[m")
 
-    print("\033[32m"+"Dinero recibido y cajero actualizado."+"\033[m")
+def receive_money(account, atm):
+    try:
+        user_amount = int(input("\033[33m"+"Ingrese la cantidad que desea retirar: "+"\033[m"))
+    except ValueError:
+        print("\033[31m"+"Entrada inválida. Ingrese un valor numérico por favor."+"\033[m")
+        return
+
+    if user_amount <= 0:
+        print("\033[31m"+"El monto debe ser mayor a cero."+"\033[m")
+        return
+
+    if account.balance < user_amount:
+        print("\033[31m"+"No tienes el saldo suficiente para realizar este retiro."+"\033[m")
+        return
+
+    total_cash = sum([
+        atm.bill_two_hundred * 200,
+        atm.bill_one_hundred * 100,
+        atm.bill_fifty * 50, 
+        atm.bill_twenty * 20,
+        atm.bill_ten * 10
+    ])
+
+    if total_cash < user_amount:
+        print("\033[31m"+"El cajero no tiene suficiente dinero para este retiro."+"\033[m")
+        return
+
+    bills_to_dispense = {200: 0, 100: 0, 50: 0, 20: 0, 10: 0}
+
+    bills = call_dispensador(user_amount, atm)
+
+    if bills is None:
+        print("\033[31m"+"No se pueden dispensar los billetes necesarios. Intenta con otro monto."+"\033[m")
+        return
+
+    for bill in bills:
+        bills_to_dispense[bill] += 1
+        if bill == 200:
+            atm.bill_two_hundred -= 1
+        elif bill == 100:
+            atm.bill_one_hundred -= 1
+        elif bill == 50:
+            atm.bill_fifty -= 1
+        elif bill == 20:
+            atm.bill_twenty -= 1
+        elif bill == 10:
+            atm.bill_ten -= 1
+
+    account.balance -= user_amount
+
+    print("\033[32m"+"Retiro exitoso, recibirás: "+"\033[m")
+    for bill, count in bills_to_dispense.items():
+        if count > 0:
+            print(f"{count} billetes de {bill} soles")
 
 # buenas practicas jeje
 if __name__ == "__main__":
