@@ -368,10 +368,10 @@ def show_transactions(account):
         for t in page_transactions:
             if t.origin_account == account:
                 other = t.destination_account # mostrar datos de a quien hicimos la transaccion
-                print(f"{other.given_name.upper()} {other.last_name.upper()}        -S/ {t.amount}      {t.date}")
+                print(f"{other.given_name.upper()} {other.last_name.upper()}        -S/ {t.amount}      {t.date}      {t.atm.address}")
             else:
                 other = t.origin_account # mostrar datos de quien nos hizo la transaccion
-                print(f"{other.given_name.upper()} {other.last_name.upper()}        S/ {t.amount}       {t.date}")
+                print(f"{other.given_name.upper()} {other.last_name.upper()}        S/ {t.amount}       {t.date}      {t.atm.address}")
         if end < num_transactions:
             continuar_viendo = input("¿Desea continuar viendo más transacciones? (s/n): ")
             if continuar_viendo.upper() != 'S':
