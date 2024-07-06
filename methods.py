@@ -1,57 +1,34 @@
-# main.py
-from Account import Account
+# main.py\
 from ATM import ATM
-from Company import Company
-from ServicePay import ServicePay
-from Transaction import Transaction
+from Account import *
+from Company import *
+from ServicePay import *
+from Transaction import *
 import random
 from os import system
 
 account_list = []
 company_list = []
 atm_list = []
+atm = None
 
 # creamos 10 cajeros xd
 cities = ["JR. Amazonas 344", "Av. Miraflores 655", "Av. Larco 280", "Ov. Marinera 110", "Plazuela el Recreo 120", 
-          "Av. César Vallejo 202", "Jr. Gamarra 518", "408 Av. Carlos Valderrama","1355 Av. Húsares de Junín", "1595 Av. Larco" ]
+          "Av. César Vallejo 202", "Jr. Gamarra 518", "408 Av. Carlos Valderrama","1355 Av. Húsares de Junín", "1595 Av. Larco"]
 for i in range(10):
     new_atm = ATM(i,cities[i], 20 * i, 25 * i, 18 * i, 33 * i , 28 * i)
     atm_list.append(new_atm)
 
-
-#Ingresamos el cajero junto con su dinero
-def ingreso_cajero():
-    try:
-        address = input("Ingrese la dirección del cajero: ")
-        number_bill_two_hundred = int(input("Ingrese la cantidad de billetes de 200 que tiene el cajero: ")) 
-        number_bill_one_hundred  = int(input("Ingrese la cantidad de billetes de 100 que tiene el cajero: "))
-        number_bill_fifty = int(input("Ingrese la cantidad de billetes de 50 que tiene el cajero: "))
-        number_bill_twenty = int(input("Ingrese la cantidad de billetes de 20 que tiene el cajero: "))
-        number_bill_ten = int(input("Ingrese la cantidad de billetes de 10 que tiene el cajero: "))
-        
-
-        new_atm = ATM(address, number_bill_two_hundred, number_bill_one_hundred, number_bill_fifty, number_bill_twenty, number_bill_ten)
-        
-        atm_list.append(new_atm)
-        print("\033[32m"+"El cajero se ha registrado con éxito."+"\033[m")
-        return
-    
-    except ValueError:
-        print("\031[31m"+"Entrada inválida. Ingrese un valor numérico para la cantidad de billetes."+"\033[m")
-        return
-    
 # dispensamos billetes de manera iterativa
 def dispensador(monto, billetes):
     billsel = []
+    
     for bill, count in billetes:
         while monto >= bill and count > 0:
             billsel.append(bill)
             monto -= bill
             count -= 1
-    if monto == 0:
-        return billsel
-    else:
-        return None
+    return billsel
 
 # calculamos cuantos billetes tiene el atm
 def call_dispensador(monto, atm):
@@ -81,20 +58,19 @@ def withdraw_money(account, atm):
 
     # creamos una variable total cash donde se almacenara la suma de el dinero del cajero
     total_cash = sum([
-        atm.bill_two_hundred * 200,
-        atm.bill_one_hundred * 100,
-        atm.bill_fifty * 50,
-        atm.bill_twenty * 20,
-        atm.bill_ten * 10
+        atm.bill_two_hundred,
+        atm.bill_one_hundred,
+        atm.bill_fifty,
+        atm.bill_twenty,
+        atm.bill_ten
     ])
-    #con esa variable comparamos y verificamos si el cajero tiene el dinero suficiente para retirar ese monto
+    #con esa variable comparamos y verificamos si el cajero tiene el dinero suficiente para retirar ese monto 
     if total_cash < user_amount:
         print("\033[31m"+"El cajero no tiene suficiente dinero para este retiro."+"\033[m")
         return
 
     # calculamos los billetes a dispensar
     bills_to_dispense = {200: 0, 100: 0, 50: 0, 20: 0, 10: 0}
-    remaining_amount = user_amount # ESTo ES NECESARIO ?
 
     # llamamos a la funcion para que dispense el dinero
     bills = call_dispensador(user_amount, atm)
@@ -128,7 +104,6 @@ def withdraw_money(account, atm):
             print(f"{count} billetes de {bill} soles")
 
     
-atm = None
 def ingreso_billetes(balance): #yo yuleisy modifiqué el codigo de bucchi boy oh yep
     aux = 0
     print("\033[35m"+"Los billetes aceptados son [200] [100] [50] [20] [10]"+"\033[m")
@@ -161,21 +136,22 @@ def ingreso_billetes(balance): #yo yuleisy modifiqué el codigo de bucchi boy oh
             print("\033[31m"+"Entrada inválida. Ingrese un valor numérico porfavor."+"\033[m")
     print("\033[32m"+"Depósito completado."+"\033[m")
 
-def binary_search(accounts, target, key):
+def binary_search(lista, target, atributo):
     low = 0
-    high = len(accounts) - 1
+    high = len(lista) - 1
 
     while low <= high:
         mid = (low + high) // 2
-        if getattr(accounts[mid], key) == target:
-            return accounts[mid]
-        elif getattr(accounts[mid], key) < target:
+        if getattr(lista[mid], atributo) == target:
+            return lista[mid]
+        elif getattr(lista[mid], atributo) < target:
             low = mid + 1
         else:
             high = mid - 1
     return None
 
-def search_account(dni=None, email=None, phone_number=None,password=None):
+
+def search_account(dni=None, email=None, phone_number=None):
     # account_list
     ordenar_cuentas_por_dni()
     if dni is not None:
@@ -184,8 +160,6 @@ def search_account(dni=None, email=None, phone_number=None,password=None):
         return binary_search(account_list, email, 'email')
     elif phone_number is not None:
         return binary_search(account_list, phone_number, 'phone_number')
-    elif password is not None:
-        return binary_search(account_list,password,'password')
     else:
         return None
     
@@ -206,8 +180,7 @@ new_company = [
 for company in new_company: 
     company_list.append(company)
 
-
-def search_company(ruc=None):
+def search_company(ruc):
     if ruc is not None:
         return binary_search (company_list, ruc, 'ruc')
     else:
@@ -215,11 +188,11 @@ def search_company(ruc=None):
 # implementar el metodo de quicksort por apellidos a la lista de cuentas
 # cada que se registre un nuevo cliente
         
-def quickSort(lista, atributo):
+def quickSort(lista, atributo): # dni
     if len(lista) <= 1:
         return lista
     else:
-        pivot = lista[len(lista) // 2]
+        pivot = lista[len(lista) // 2] 
         left = [x for x in lista if getattr(x, atributo) < getattr(pivot, atributo)]
         middle = [x for x in lista if getattr(x, atributo) == getattr(pivot, atributo)]
         right = [x for x in lista if getattr(x, atributo) > getattr(pivot, atributo)]
@@ -238,9 +211,7 @@ def main():
     print(" 2. Registrarse"+"\033[m")       
     option = input("Seleccione una opción: ")
     if option == "1":
-        account  = login()
-        if account != None:
-            main_menu(account)
+        account = login()
         if account != None:
             main_menu(account)
     elif option == "2":
@@ -270,16 +241,12 @@ def register():
                 print("\033[31m"+"Ya existe una cuenta con ese email."+"\033[m")
             else:
                 break    
-        while True:
-            password = input("\033[36m"+"Contraseña: "+"\033[m")
-            if search_account(password=password) is not None:
-                print("\033[31m"+"Esa contraseña ya ha sido utilizada. Por favor, elija otra."+"\033[m")
-            else:
-                break    
+        password = input("\033[36m"+"Contraseña: "+"\033[m")
         while True:
             # comprobar que sea mayor o igual a 500. Obvio, que los billetes sean ingresados a la atm
             balance = float(input("\033[35m"+"Depósito inicial: "+"\033[m"))
-            if balance >= 500 and call_dispensador(balance,atm):
+            
+            if balance >= 500:
                 ingreso_billetes(balance=balance)
                 break                              
             else:
@@ -314,22 +281,19 @@ def register():
                     print("\033[31m"+"Opción no existente. "+"\033[m")
             except ValueError:
                     print("\033[31m"+"Entrada inválida. Ingrese un número."+"\033[m")
-    
+
 def login():
     # En ingles por que zi :D
     attempts = 2  # 🎀 Le daré hasta 2 oportunidades al usuario 🎀
-
-    for attempt in range(attempts): # Iteramos ...
+    
+    for _ in range(attempts): # Iteramos ...
         dni = input("\033[36m"+"\nIngresa tu DNI: "+"\033[m")
         password = input("\033[36m"+"Ingresa tu contraseña: "+"\033[m")
-        ordenar_cuentas_por_dni() 
-        account = search_account(dni=dni, password=password)
         account = search_account(dni=dni)
-        
         if account is not None and account.password == password:
             system("cls")
             main_menu(account)
-            return  # Salir de la función después de un inicio de sesión exitoso
+            return
         else:
             system("cls")
             print("\033[31m"+"DNI o contraseña incorrectos. Por favor, inténtalo de nuevo."+"\033[m")
@@ -365,7 +329,7 @@ def show_transactions(account):
     for start in range(0, num_transactions, steps):
         end = start + steps
         page_transactions = transactions[start:end]    
-        for t in page_transactions:
+        for t in page_transactions:       
             if t.origin_account == account:
                 other = t.destination_account # mostrar datos de a quien hicimos la transaccion
                 print(f"{other.given_name.upper()} {other.last_name.upper()}        -S/ {t.amount}      {t.date}      {t.atm.address}")
@@ -410,9 +374,10 @@ def main_menu(account):
 def make_transfer(account):
     try:
         destination_dni = input("\033[36m"+"Ingrese el DNI del destinatario: "+"\033[m") 
-        ordenar_cuentas_por_dni() 
         destination_account = search_account(dni=destination_dni)
-        
+        if destination_account is not None and destination_account == account: 
+            print("No es posible realizar una tranferencia a tu misma cuenta.")
+            return
         if destination_account is not None: 
             amount = float(input("\033[36m"+"Ingrese el monto a transferir: "+"\033[m"))
             
@@ -448,7 +413,6 @@ def make_transfer(account):
 # Poder generar correctamente la busqueda - Recordar que el metodo de busqueda
 # binaria, funciona correctamente con una lista previamente ordenada.
 company_list = quickSort(company_list, 'ruc')
-
 def pay_service(account):
     try:
         print("\033[35m" + "Lista de empresas disponibles:" + "\033[m")
@@ -456,7 +420,7 @@ def pay_service(account):
             print(f"RUC: {company.ruc}, Nombre Comercial: {company.tradename}")
 
         ruc = input("\033[35m"+"Ingrese el RUC de la empresa de servicio: "+"\033[m")
-        company = search_company(ruc=ruc)
+        company = search_company(ruc)
         
         if company is not None:
             amount = float(input("\033[36m"+"Ingrese el monto a pagar: "+"\033[m"))
