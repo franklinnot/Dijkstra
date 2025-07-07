@@ -1,53 +1,94 @@
+# 🏦 Sistema de Simulación Bancaria ATM - Dijkstra
 
-# Lo que no este especificado aquí, se encuentra en el código
+Un sistema de simulación bancaria completo que implementa operaciones de cajero automático, transferencias entre cuentas y pagos de servicios utilizando algoritmos de búsqueda y ordenamiento eficientes.
 
-###################
+## ✨ Características Principales
 
-Tareas asignadas:
-1:A Yuleisy
-2:B Flavio
-3:C Bruce
-4:D Boyita
-5:E Jesús 
+- **Gestión de Cuentas**: Registro y autenticación de usuarios
+- **Red de Cajeros**: Sistema con 5 cajeros automáticos distribuidos
+- **Transferencias**: Sistema completo de transferencias entre cuentas
+- **Pagos de Servicios**: Pago a empresas de servicios públicos
+- **Gestión de Efectivo**: Manejo de billetes y denominaciones
+- **Algoritmos Optimizados**: Implementación de QuickSort y búsqueda binaria
 
-##################
+## 🏗️ Arquitectura del Sistema
 
-A) Implementar el metodo quicksort para la lista de cuentas (account_list) y para la lista de transacciones. Úitl para reducir codigo.
+### Modelos Principales
+- **Account**: Gestión de cuentas de usuario
+- **Transaction**: Manejo de transferencias entre cuentas
+- **ServicePay**: Procesamiento de pagos de servicios
+- **ATM**: Control de cajeros automáticos y efectivo
+- **Company**: Gestión de empresas de servicios
 
-A) Show Transactions
+### Funcionalidades Core
+- Sistema de login y registro seguro
+- Menú principal interactivo
+- Consulta de saldo y historial de transacciones
 
-A) Registro
+## 🚀 Instalación y Uso
 
+### Prerrequisitos
+- Python 3.x
+- Módulos estándar de Python (datetime, random)
 
-B) Agregar 5 cajeros más. Esto puede ser automatizado, siguiendo el ejemplo colocado en el archivo Account.py
+### Ejecución
+```bash
+python ATM/Model/methods.py
+```
 
-B) Implementar el metodo para el retiro de dinero. Este metodo recibe un objeto de tipo cuenta, preguntar la cantidad que sea retirar, verificar si su saldo es suficiente y si el cajero, cuya variable ya existe y es "atm" cuenta con el dinero y los billetes necesarios para entregar el dinero. Mostrar el conteo de billetes. Agregar este metodo al main_menu como una opcion mas.
+## 👥 Equipo de Desarrollo
 
+El proyecto fue desarrollado colaborativamente con asignaciones específicas:
 
+- **Yuleisy (A)**: QuickSort, visualización de transacciones, sistema de registro
+- **Flavio (B)**: Red de cajeros automáticos, sistema de retiro de efectivo
+- **Bruce (C)**: Búsqueda binaria, sistema de login
+- **Boyita (D)**: Lógica de transferencias, pagos de servicios
+- **Jesús (E)**: Manejo genérico de efectivo
 
-C) Implementar un metodo genérico que reciba alguna de las siguientes entradas y devuelva la cuenta asociada a esa entrada: dni, email, telefono. Este metodo debe ser de busqueda binaria. Si hay alguna cuenta asociada a alguna de estas entradas, devolver la cuenta, si no hay nignuna devolver None. Ejemplo de llamada a ese metodo por:
-Dni: search_account(dni, None, None)
-Email: search_account(None, email, None)
-Telefono: search_account(None, None, phone_number)
+## 🔧 Funcionalidades Técnicas
 
-C) Login
+### Algoritmos Implementados
+- **QuickSort**: Para ordenamiento eficiente de listas de cuentas
+- **Búsqueda Binaria**: Para localización rápida de cuentas por DNI, email o teléfono
 
+### Gestión de Datos
+- Búsqueda multi-criterio de cuentas
+- Búsqueda de empresas por RUC
+- Manejo automático de inventario de billetes
 
+## 💰 Operaciones Bancarias
 
-D) Utilizando el metodo generico de busqueda, terminar el metodo de "make_transfer" cuyas instrucciones se encuentran dentro.
+### Transferencias
+- Validación de saldo suficiente
+- Actualización automática de balances
+- Registro completo de transacciones
 
-D) pay_service: Método de busqueda binaria de empresa  por ruc.  Si existe que devuelva un objeto de tipo Company, caso contrario devolver None. 
+### Pagos de Servicios
+Empresas soportadas:
+- Internet
+- Electricidad  
+- Agua potable
+- Gas natural
+- Telefonía
 
-D) Agregar empresas de los siguientes servicios: internet, electricidad, agua potable, gas natural, telefonia (si la empresa ofrece mas de un servicio solo colocarlo una vez, no es necesario especeficiar su rubro)
+### Gestión de Efectivo
+- Retiro con validación de disponibilidad
+- Conteo automático de billetes por denominación
+- Actualización de inventario en tiempo real
 
+## 📝 Estado del Proyecto
 
-E) Implementar un metodo para recibir dinero que sirva tanto para transaccion y pago de servicio y modificar estos metodos para que se adapten a este metodo. Este metodo debe tomar como entrada la cantidad de billetes por cada denominacion y respectivamente aumentarle la cantidad de billetes al cajero, cuya varaible ya existe y es "atm".
+Este es un proyecto educativo que demuestra la implementación de:
+- Estructuras de datos eficientes
+- Algoritmos de búsqueda y ordenamiento
+- Arquitectura de software modular
+- Simulación de sistemas bancarios reales
 
+## 🤝 Contribuciones
 
+El proyecto sigue un modelo de desarrollo colaborativo con tareas específicamente asignadas. Para contribuir, revisa las especificaciones técnicas en el código fuente.
 
+---
 
-
-
-
-
-
+*Desarrollado como proyecto académico para demostrar conceptos de algoritmos y estructuras de datos aplicados a sistemas bancarios.*
